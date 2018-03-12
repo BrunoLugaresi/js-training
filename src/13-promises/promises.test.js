@@ -21,14 +21,23 @@ test('promises def', () => {
  * Fazer junto
  */
 test('simple promise chaining', (done) => {
-    done();
+    
+    simplePromise('valor')
+       .then(v => console.log('Meu valor ', v))
+       .then(() => done());
+
 });
 
 /**
  * Fazer junto
  */
 test('simple promise error catching chaining', (done) => {
-    done();
+
+    simplePromise()
+       .then(v => console.log('Meu valor da funcao com erro ', v))
+       .then(() => done())
+       .catch(error => console.log('Erro: ',error))
+       .then(() => done());
 });
 
 /**
@@ -36,8 +45,26 @@ test('simple promise error catching chaining', (done) => {
  * 
  * Refatorar o exercício dos callbacks (#2) para utilizar Promises conforme exemplo mostrado anteriormente
  */
-test('refactoring callback exercise', () => {
 
+test('refactoring callback exercise', () => {
+    
+    const funcaoPromisse = (url) => new Promise((resolve, reject) => {
+        if (url === '/api/treinamento') {
+            resolve('Sucesso');
+        } else {
+            reject('Error');
+        }       
+    });
+
+    function chamarApiRest(apiRest) {
+
+        return funcaoPromisse(apiRest)
+               .then((result) => expect(result).to.equal('Sucesso'))
+               .then(() => done());
+    }
+
+    chamarApiRest('/api/treinamento')  
+   
 });
 
 /**
@@ -45,6 +72,26 @@ test('refactoring callback exercise', () => {
  * 
  * Refatorar o exercício do encadeamento dos callbacks para utilizar o encadeamento das promises.
  */
+
 test('refactoring callback chaining promises', () => {
+
+    const funcaoPromisse = (url) => new Promise((resolve, reject) => {
+        if (url === '/api/treinamento') {
+            resolve('Sucesso');
+        } else {
+            reject('Error');
+        }       
+    });
+
+    function chamarApiRest(apiRest) {
+
+        return funcaoPromisse(apiRest)
+               .then((result) => expect(result).to.equal('Sucesso'))
+               .catch(funcaoPromisse('/api/treinamento'))
+               .then((result) => expect(result).to.equal('Sucesso'))
+               .then(() => done());
+    }
+
+    chamarApiRest('/api/treinamentoXXX')  
 
 });

@@ -43,7 +43,27 @@ test('callback hell', () => {
  *  - Você deve chamar a sua função dentro do bloco de testes abaixo 'http mock with callbacks'
  */
 test('http mock with callbacks', () => {
+
+    const funcaoSucesso = resultado => {
+       return resultado;
+    };
+
+    const funcaoFalha = erro => {
+       return erro;
+    };
+
+    function chamarApiRest(apiRest,funcaoSucesso,funcaoFalha) {
+
+        if (apiRest === '/api/treinamento') {
+           return funcaoSucesso('Sucesso');
+        } else {
+           return funcaoFalha('Falha');
+        }
+    }
+
+    const result = chamarApiRest('/api/treinamento', funcaoSucesso, funcaoFalha)   
     
+    expect(result).toEqual('Sucesso');
 });
 
 /**
@@ -54,4 +74,29 @@ test('http mock with callbacks', () => {
  */
 test('http mock with callbacks chaining', () => {
 
+    const funcaoSucesso = () => {
+       return 'Sucesso';
+    };
+
+    const funcaoFalha = () => {
+       return 'Erro';
+    };
+
+    function funcCallback(callback) {
+        return callback();
+    }
+
+    function chamarApiRest(apiRest,paramFuncaoSucesso,paramFuncaoFalha) {
+
+        if (apiRest === '/api/treinamento') {
+            return funcCallback(paramFuncaoSucesso) 
+        } else {
+            return funcCallback(paramFuncaoFalha)
+        }
+
+    }
+
+    const result = chamarApiRest('/api/treinamento', funcaoSucesso, funcaoFalha)   
+    
+    expect(result).toEqual('Sucesso');
 });
